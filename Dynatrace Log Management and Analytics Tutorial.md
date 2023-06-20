@@ -10,39 +10,55 @@ tags:
 ---
 Dynatrace Log Management and Analytics Tutorial<!-- omit in toc -->
 =
-The purpose of this short tutorial is to present example functionalities offered by Log Management and Analytics, the latest Dynatrace log solution powered by [Grail](https://www.dynatrace.com/support/help/platform/grail). A use case described below will help you learn how to retrieve the required data from the available logs, how to create a metric based on these data, and how to present the selected results on a Dynatrace dashboard.
+The purpose of this short tutorial is to present example new capabilities offered by Log Management and Analytics, the latest Dynatrace log solution powered by [Grail](https://www.dynatrace.com/support/help/platform/grail). The use case described below will help you learn how to retrieve the required data from the available logs, how to create a metric based on these data, and how to present the selected results on a Dynatrace dashboard.
 
-# Situation
-Let's suppose that you have logs which contain information about various processes and services running on an online store website, in the Kubernetes environment. You would like to check how long it takes to load product detail pages but you don't know the format in which such information is presented in the logs. There can be plenty of useful details in the logs, so let's get down to work.
+# Use case
+Let's suppose that you have logs which contain various statuses. You would like to check what kind of statuses there are in the logs, how many of them in each category, and possibly to calculate a percentage of one status category in all relevant logs.
 
-
-# Accessing logs
+# Extracting data from logs
+## Accessing logs
 First of all, you should actually see the available logs. To do this:  
-1. Go to Dynatrace menu.
+1. Go to the Dynatrace menu.
 2. Click **Observe and Explore**.
 3. Click **Logs**.
 
-Now you are supposed to write a query to access the logs and the information. There are two query modes: **Simple** and **Advanced**. Because for now you don't know exactly what you'll be looking for, you should select the **Advanced** mode. In this mode, you'll write queries manually with the use of the **Dynatrace Query Language**. Learn more about the syntax and other details of this language in [DQL language reference](https://www.dynatrace.com/support/help/platform/grail/dynatrace-query-language/dql-reference).
+Now you are supposed to write a query to access the logs and view the information. There are two query modes: **Simple** and **Advanced**. Because for now you don't know exactly what you'll be looking for, you should select the **Advanced** mode. In this mode, you'll write queries manually with the use of the **Dynatrace Query Language**. Learn more about the syntax and other details of this language in [DQL language reference](https://www.dynatrace.com/support/help/platform/grail/dynatrace-query-language/dql-reference).
 
-# Writing a simple query
+## Writing a simple query
 The first command you should use is ```fetch```. It serves for loading the resources, which in this case are logs.
 1. Write ```fetch```.
 2. Enter a space.
 3. Write ```logs```.
 4. Click **Run query**.
 
+![Fetch logs command](Images/screenshot01_fetch_logs.jpg "Fetch logs command")
+
 This way you'll see all the available logs in the form a table. If you click on any item in the table, a panel will appear on the right side of the screen, presenting various pieces of information contained in the selected log.
 
-From all the information, you're interested in the average time of product detail page loading. You know that the ```frontend``` component is responsible for rendering the page, so now you can filter your results to see only such logs that include this component. The basic command used for filtering results is called ```filter```. All commands are sequenced by the pipe character (|).
+Do you want to narrow down the timeframe of the logs? Simply extend your initial command by writing the example code presented in the screenshot below:
 
-# Filtering the results
+![Fetch logs command narrowed down](Images/screenshot02_fetch_logs_from.jpg "Fetch logs command narrowed down")
+
+Now you'll see only the logs from the past one hour. If you want to get logs from the past six hours, write ```-6h``` instead of ```-1h```.
+
+But let's get back to the results you obtained. From all the information, you're interested in determining what statuses are contained in the logs. The basic command serving this purpose is called ```summarize```, and in our case it should be modified by the ```count``` function.
+
+* Note: All commands are sequenced by the pipe character (|).
+
+## Extracting specific information
 1. Place the cursor in the new line.
 2. Enter the pipe (|) character.
 3. Enter a space.
-4. Write ```filter k8s.deployment.name == "frontend-*"```
+4. Write ```summarize count(), by: status```.
 5. Click **Run query**.
 
-The table now shows only results with the ```frontend``` component. When you click on some of the results, you can notice in the panel on the right side of the screen that certain logs include an attribute you're looking for: ```http.resp.took_ms```. It's possible to further modify your initial query so that your table shows only results with this attribute.
+![Summarize command](Images/screenshot03_summarize_by_status.jpg "Summarize by status")
+
+The table now shows all the available statuses and the total quantity of logs with the given status.
+
+![Available statuses with quantities](Images/screenshot04_summarize_result.jpg "Available statuses with quantities")
+
+It's possible to further modify your initial query so that your table shows only results with this attribute.
 
 1. At the end of the query line ```| filter k8s.deployment.name == "frontend-*"``` add a space and write ```and matchesPhrase(content, "http.resp.took_ms")```.
 2. Click **Run query**.
