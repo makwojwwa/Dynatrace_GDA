@@ -8,32 +8,31 @@ tags:
 - metric
 - dashboard
 ---
-Dynatrace Log Management and Analytics Tutorial<!-- omit in toc -->
+Dynatrace Log Management and Analytics – DQL query tutorial<!-- omit in toc -->
 =
-The purpose of this short tutorial is to present example new capabilities offered by Log Management and Analytics, the latest Dynatrace log solution powered by [Grail](https://www.dynatrace.com/support/help/platform/grail). The use case described below will help you learn how to retrieve the required data from the available logs, how to create a metric based on these data, and how to present the selected results on a Dynatrace dashboard.
+# Introduction
+The purpose of this short tutorial is to present examples of new capabilities offered by Log Management and Analytics, the latest Dynatrace log solution powered by [Grail](https://www.dynatrace.com/support/help/platform/grail). The use case described below will help you learn how to write DQL queries to retrieve the required data from the available logs, how to present the generated results on a Dynatrace dashboard, and how to create a metric based on a query.
 
 # Use case
-Let's suppose that you have logs which contain various statuses. You would like to check what kind of statuses there are in the logs, how many of them in each category, and possibly to calculate a percentage of one status category in all relevant logs.
+Let's suppose that you have logs which contain various statuses. You'd like to check what kind of statuses there are in the logs, how many of them in each category, and possibly to calculate a percentage of one status category in all relevant logs.
 
-# Extracting data from logs
-## Accessing logs
+## Extracting data from logs
+### Accessing logs
 First of all, you should actually see the available logs. To do this:  
 1. Go to the Dynatrace menu.
 2. Click **Observe and Explore**.
 3. Click **Logs**.
 
-Now you are supposed to write a query to access the logs and view the information. There are two query modes: **Simple** and **Advanced**. Because for now you don't know exactly what you'll be looking for, you should select the **Advanced** mode. In this mode, you'll write queries manually with the use of the **Dynatrace Query Language**. Learn more about the syntax and other details of this language in [DQL language reference](https://www.dynatrace.com/support/help/platform/grail/dynatrace-query-language/dql-reference).
+Now you need to write a query to access the logs and view the information. There are two query modes: **Simple** and **Advanced**. Because for now you don't know exactly what you'll be looking for, you should select the **Advanced** mode. In this mode, you'll write queries manually with the use of the **Dynatrace Query Language**. Learn more about the syntax and other details of this language in [DQL language reference](https://www.dynatrace.com/support/help/platform/grail/dynatrace-query-language/dql-reference).
 
-## Writing a simple query
+### Writing a simple query
 The first command you should use is ```fetch```. It serves for loading the resources, which in this case are logs.
-1. Write ```fetch```.
-2. Enter a space.
-3. Write ```logs```.
-4. Click **Run query**.
+1. Write ```fetch logs```.
+2. Click **Run query**.
 
 ![Fetch logs command](Images/screenshot01_fetch_logs.jpg "Fetch logs command")
 
-This way you'll see all the available logs in the form a table. If you click on any item in the table, a panel will appear on the right side of the screen, presenting various pieces of information contained in the selected log.
+This way you'll see all the available logs in the form of a table. If you click any item in the table, a panel will appear on the right side of the screen, presenting various pieces of information contained in the selected log.
 
 Do you want to narrow down the timeframe of the logs? Simply extend your initial command by writing the example code presented in the screenshot below:
 
@@ -43,14 +42,12 @@ Now you'll see only the logs from the past one hour. If you want to get logs fro
 
 But let's get back to the results you obtained. From all the information, you're interested in determining what statuses are contained in the logs. The basic command serving this purpose is called ```summarize```, and in our case it should be modified by the ```count``` function.
 
-* Note: All commands are sequenced by the pipe character (|).
+* Note: All commands in a query are sequenced by the pipe character (|).
 
-## Extracting information about statuses
+### Extracting information about statuses
 1. Place the cursor in the new line.
-2. Enter the pipe (|) character.
-3. Enter a space.
-4. Write ```summarize count(), by: status```.
-5. Click **Run query**.
+2. Write ```| summarize count(), by: status```.
+3. Click **Run query**.
 
 ![Summarize command](Images/screenshot03_summarize_by_status.jpg "Summarize by status")
 
@@ -58,7 +55,7 @@ The table now shows all the available statuses and the total quantity of logs wi
 
 ![Available statuses with quantities](Images/screenshot04_summarize_result.jpg "Available statuses with quantities")
 
-## Calculating the number of logs with a specific status
+### Calculating the number of logs with a specific status
 Thanks to the above query you've learned what statuses your logs can have. Now let's suppose that you'd like to know how many logs have the ```error``` status out of the total number of logs. To get this information, you still need to use the ```summarize``` command, but this time the query will be more complex.
 
 1. Delete line 2 of your query.
@@ -73,7 +70,7 @@ Your table with the results should look like this:
 But what has actually happened?  
 You created two new variables: ```total``` and ```errorTotal```, which you can see in the table with the results. The ```total``` result is the number of all logs and was calculated by the ```count()``` function. The ```errorTotal``` result, in turn, is the number of all logs with the ```error``` status, calculated by the ```countIf``` function.
 
-## Calculating a percentage
+### Calculating a percentage
 But wait, there's more!
 DQL allows you, among others, to calculate the percentage of ```error``` logs in all logs. What you have to do is to add a new command to your query: ```fieldsAdd```.
 
@@ -83,14 +80,14 @@ DQL allows you, among others, to calculate the percentage of ```error``` logs in
 
 ![fieldsAdd command to calculate percentage](Images/screenshot07_fieldsAdd.jpg "fieldsAdd command to calculate percentage")
 
-Now your table contains a new column, with the heading you've just entered in the new line of the query: ```errorPercent```. 
+Now your table contains a new column with the heading you've just entered in the new line of the query: ```errorPercent```. 
 
 ![New errorPercent column](Images/screenshot08_fieldsAdd_result.jpg "New errorPercent column")
 
 Using DQL, you've created the new result in the form of a double value (```toDouble``` function) by multiplying the ```errorTotal``` value by 100 and then dividing by the ```total``` value.
 
-## Cleaning up the table
-If you want some columns disappear from the table, so that it's more legible, you can use the ```fields``` command. It is responsible for showing only the required columns. Remember to modify the command by the name of the column you want.
+### Cleaning up the table
+If you want some columns to disappear from the table so that it's more legible, you can use the ```fields``` command. It's responsible for showing only the required columns. Remember to modify the command with the name of the column you want to be presented.
 
 1. Place the cursor in the new line.
 2. Write ```| fields errorPercent```.
@@ -98,12 +95,12 @@ If you want some columns disappear from the table, so that it's more legible, yo
 
 ![fields command to clean up the table](Images/screenshot09_fields.jpg "fields command to clean up the table")
 
-## Selecting visualization type
+### Selecting visualization type
 If you don't like the current type of visualization of your results, you can easily change it. Simply find the **Visualization type** area just above the table and click **Single value**.
 
 ![Visualization type](Images/screenshot10_visualization_type.jpg "Visualization type")
 
-# Presenting the metric on the dashboard
+## Presenting the metric on the dashboard
 Once you've received the result of your query, you can present it on the dashboard.
 
 1. Click the **Actions** button located in the right part of the screen.
@@ -118,7 +115,7 @@ Once you've received the result of your query, you can present it on the dashboa
 
     ![Creating a new dashboard](Images/screenshot13_create_new_dashboard.jpg "Creating a new dashboard")
 
-4. Click the **Tile title** field, enter any name you want for your new tile and press the **Enter** key.
+4. Click the **Tile title** field, enter any name you want for your new tile, and press the **Enter** key.
    
    ![Adding tile title](Images/screenshot14_tile_title.jpg "Adding tile title")
 
@@ -135,12 +132,12 @@ Once you've received the result of your query, you can present it on the dashboa
 
 Mission complete!
 
-# Metrics
+## Metrics
 Before Log Management and Analytics, it was impossible to create such parameters as the percentage in our example on the fly. The standard procedure was to create a metric manually, which required you to know everything about the log content and format beforehand. Now you don't have to do that, but if you want to create a metric based on your query, this option is still available.
 
 * Note: Metrics created manually will capture only the logs that were generated after the moment of metric creation. They can't be used for checking historical data contained in the existing logs.
 
-## Creating a metric
+### Creating a metric
 The new metric value can represent an occurrence of log records or an attribute value.
    
 1. Make sure that you are in **Logs** in the Dynatrace menu.
@@ -152,6 +149,8 @@ The new metric value can represent an occurrence of log records or an attribute 
 
 Learn more about metrics in [Log metrics](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-analysis/lma-log-metrics).
 
+# Summary
+This was just a short highlight of the capabilities offered by Dynatrace Log Management and Analytics and by DQL. If you want to see more examples, go to [Log on Grail examples](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/logs-on-grail-examples). The comprehensive list of commands is presented in [DQL commands](https://www.dynatrace.com/support/help/platform/grail/dynatrace-query-language/commands) and the list of functions – in [DQL functions](https://www.dynatrace.com/support/help/platform/grail/dynatrace-query-language/functions).
 
 
 
