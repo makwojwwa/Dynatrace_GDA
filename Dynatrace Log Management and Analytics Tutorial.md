@@ -103,32 +103,54 @@ If you don't like the current type of visualization of your results, you can eas
 
 ![Visualization type](Images/screenshot10_visualization_type.jpg "Visualization type")
 
-# Creating a metric
-Now you can create a metric based on the result of your query. The new metric value can represent an occurrence of log records or an attribute value.
-   
-1. Make sure that you are in **Logs** in the Dynatrace menu.
-2. Select **Create metric**.
-3. Append the metric name to the metric key log.
-4. Save changes.
-
-Learn more about metrics in [Log metrics](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-analysis/lma-log-metrics).
-
 # Presenting the metric on the dashboard
 Once you've received the result of your query, you can present it on the dashboard.
 
-1. Find the **Visualization type** area and click **Single value**.
-2. Click the **Actions** button located in the right part of the screen.
-3. Click **Pin to dashboard**.
-4. Click the **Dashboard** field. 
-5. Click **Create new dashboard**.
-6. Click the **Tile title** field.
-7. Enter any name you want for your new tile.
-8. Click the **Pin** button.
-9. Click the **Open dashboard** button.
-10. Click the field with the name starting with **New dashboard**.
-11. Enter any name you want for your new dashboard.
+1. Click the **Actions** button located in the right part of the screen.
+   
+   ![Actions button](Images/screenshot11_actions.jpg "Actions button")
 
+2. Click **Pin to dashboard**.
+   
+   ![Pin to dashboard](Images/screenshot12_pin_to_dashboard.jpg "Pin to dashboard")
 
+3. Click the **Dashboard** field and select **Create new dashboard**.
+
+    ![Creating a new dashboard](Images/screenshot13_create_new_dashboard.jpg "Creating a new dashboard")
+
+4. Click the **Tile title** field, enter any name you want for your new tile and press the **Enter** key.
+   
+   ![Adding tile title](Images/screenshot14_tile_title.jpg "Adding tile title")
+
+5. Click the **Pin** button (you can see it in the images above).
+6. Click the **Open dashboard** button.
+   
+   ![Opening the dashboard](/Images/screenshot15_open_dashboard.jpg "Opening the dashboard")
+
+7. Click the field with the name starting with **New dashboard**.
+   
+   ![Naming the new dashboard](Images/screenshot16_dashboard_name.jpg "Naming the new dashboard")
+
+8.  Enter any name you want for your new dashboard and press the **Enter** key.
+
+Mission complete!
+
+# Metrics
+Before Log Management and Analytics, it was impossible to create such parameters as the percentage in our example on the fly. The standard procedure was to create a metric manually, which required you to know everything about the log content and format beforehand. Now you don't have to do that, but if you want to create a metric based on your query, this option is still available.
+
+* Note: Metrics created manually will capture only the logs that were generated after the moment of metric creation. They can't be used for checking historical data contained in the existing logs.
+
+## Creating a metric
+The new metric value can represent an occurrence of log records or an attribute value.
+   
+1. Make sure that you are in **Logs** in the Dynatrace menu.
+2. Make sure that you are in the **Simple mode**.
+3. Click the **Create metric** button.  
+   Your log viewer query is now displayed on the Log metrics page.
+4. Append the metric name to the metric key log.
+5. Save changes.
+
+Learn more about metrics in [Log metrics](https://www.dynatrace.com/support/help/observe-and-explore/logs/log-management-and-analytics/lma-analysis/lma-log-metrics).
 
 
 
