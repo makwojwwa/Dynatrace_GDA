@@ -45,7 +45,7 @@ But let's get back to the results you obtained. From all the information, you're
 
 * Note: All commands are sequenced by the pipe character (|).
 
-## Extracting specific information
+## Extracting information about statuses
 1. Place the cursor in the new line.
 2. Enter the pipe (|) character.
 3. Enter a space.
@@ -58,20 +58,50 @@ The table now shows all the available statuses and the total quantity of logs wi
 
 ![Available statuses with quantities](Images/screenshot04_summarize_result.jpg "Available statuses with quantities")
 
-It's possible to further modify your initial query so that your table shows only results with this attribute.
+## Calculating the number of logs with a specific status
+Thanks to the above query you've learned what statuses your logs can have. Now let's suppose that you'd like to know how many logs have the ```error``` status out of the total number of logs. To get this information, you still need to use the ```summarize``` command, but this time the query will be more complex.
 
-1. At the end of the query line ```| filter k8s.deployment.name == "frontend-*"``` add a space and write ```and matchesPhrase(content, "http.resp.took_ms")```.
-2. Click **Run query**.
+1. Delete line 2 of your query.
+2. Write ```| summarize total = count(), errorTotal = countIf( status == "ERROR")```.
+3. Click **Run query**.
 
-Now you get only the logs containing the required attribute. You want to calculate the average value of all the results but it seems that the contents of the logs are in the JSON format. This is why you need to parse the contents of the logs before doing that. It's easy in the case of JSON.
+![Summarize command with variables](Images/screenshot05_total_error_Total.jpg "Summarize command with variables")
+
+Your table with the results should look like this:
+![Table with error logs](Images/screenshot06_total_error_Total_result.jpg "Table with error logs")
+
+But what has actually happened?  
+You created two new variables: ```total``` and ```errorTotal```, which you can see in the table with the results. The ```total``` result is the number of all logs and was calculated by the ```count()``` function. The ```errorTotal``` result, in turn, is the number of all logs with the ```error``` status, calculated by the ```countIf``` function.
+
+## Calculating a percentage
+But wait, there's more!
+DQL allows you, among others, to calculate the percentage of ```error``` logs in all logs. What you have to do is to add a new command to your query: ```fieldsAdd```.
 
 1. Place the cursor in the new line.
-2. Write ```| parse content, "JSON:json"```.
-3. Place the cursor in the new line.
-4. Write ```| summarize avg(json[http.resp.took_ms]), alias: avg_ms```
-5. Click **Run query**.
+2. Write ```| fieldsAdd errorPercent = (toDouble(errorTotal)*100 / total)```.
+3. Click **Run query**.
 
-This way Dynatrace Log Management and Analytics extracted the required attribute from the content of all suitable logs, calculated the average result and presented it as ```avg_ms```.
+![fieldsAdd command to calculate percentage](Images/screenshot07_fieldsAdd.jpg "fieldsAdd command to calculate percentage")
+
+Now your table contains a new column, with the heading you've just entered in the new line of the query: ```errorPercent```. 
+
+![New errorPercent column](Images/screenshot08_fieldsAdd_result.jpg "New errorPercent column")
+
+Using DQL, you've created the new result in the form of a double value (```toDouble``` function) by multiplying the ```errorTotal``` value by 100 and then dividing by the ```total``` value.
+
+## Cleaning up the table
+If you want some columns disappear from the table, so that it's more legible, you can use the ```fields``` command. It is responsible for showing only the required columns. Remember to modify the command by the name of the column you want.
+
+1. Place the cursor in the new line.
+2. Write ```| fields errorPercent```.
+3. Click **Run query**.
+
+![fields command to clean up the table](Images/screenshot09_fields.jpg "fields command to clean up the table")
+
+## Selecting visualization type
+If you don't like the current type of visualization of your results, you can easily change it. Simply find the **Visualization type** area just above the table and click **Single value**.
+
+![Visualization type](Images/screenshot10_visualization_type.jpg "Visualization type")
 
 # Creating a metric
 Now you can create a metric based on the result of your query. The new metric value can represent an occurrence of log records or an attribute value.
