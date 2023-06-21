@@ -1,7 +1,7 @@
 ---
 title: Dynatrace Log Management and Analytics – DQL query Tutorial
 description: Extracting data from logs, presenting results on the dashboard, and creating metrics
-date: "2023-06-22"
+date: "2023-06-21"
 category: tutorial
 tags:
 - log
