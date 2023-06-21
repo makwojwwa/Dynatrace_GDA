@@ -57,7 +57,7 @@ The table now shows all the available statuses and the total quantity of logs wi
 
 ![Available statuses with quantities](Images/screenshot04_summarize_result.jpg "Available statuses with quantities")
 
-### Calculating the number of logs with a specific status
+### Counting logs with a specific status among all logs
 Thanks to the above query you've learned what statuses your logs can have and how many logs with a specific status there are. Now let's suppose that you'd like to know how many logs have the ```ERROR``` status out of the total number of logs. To get this information, you still need to use the ```summarize``` command, but this time the query will be more complex.
 
 1. Delete line 2 of your query.
@@ -74,7 +74,7 @@ You created two new variables: ```total``` and ```errorTotal```, which you can s
 
 ### Calculating a percentage
 But wait, there's more!
-DQL allows you, among others, to calculate the percentage of ```ERROR``` logs in all logs. What you have to do is to add a new command to your query: ```fieldsAdd```.
+DQL allows you, among others, to calculate the percentage of ```ERROR``` logs in all logs. What you have to do is to add a new command to your query: ```fieldsAdd```. This command will expand the table by a new column, which will include the results of the following calculation:
 
 1. Place the cursor in the new line.
 2. Write ```| fieldsAdd errorPercent = (toDouble(errorTotal)*100 / total)```.
@@ -121,8 +121,8 @@ Once you've received the result of your query, you can present it on the dashboa
    
    ![Adding tile title](Images/screenshot14_tile_title.jpg "Adding tile title")
 
-5. Click the **Pin** button (you can see it in the images above).
-6. Click the **Open dashboard** button.
+5. Click **Pin** (you can see this button in the images above).
+6. Click **Open dashboard**.
    
    ![Opening the dashboard](/Images/screenshot15_open_dashboard.jpg "Opening the dashboard")
 
@@ -143,7 +143,7 @@ Before Log Management and Analytics, it was impossible to create such parameters
 The new metric value can represent an occurrence of log records or an attribute value.
    
 1. Make sure that you are in **Logs** in the Dynatrace menu.
-2. Make sure that you are in the **Simple mode**.
+2. Make sure that you are in the **Simple** mode.
 3. Click the **Create metric** button.  
    Your log viewer query is now displayed on the **Log metrics** page.
 4. Append the metric name to the metric key log.
